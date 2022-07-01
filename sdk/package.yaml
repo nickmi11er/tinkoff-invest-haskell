@@ -1,0 +1,68 @@
+name: tinkoff-invest-sdk
+version: 0.1.0.0
+homepage: https://github.com/nickmi11er/tinkoff-invest-haskell#readme
+license: MIT
+author: Nick Miller
+maintainer: nickmiller.on@gmail.com
+copyright: Copyright (c) 2022 Nick Miller
+
+extra-source-files:
+  - proto/**/*.proto
+
+default-extensions:
+  - LambdaCase
+  - DataKinds
+
+custom-setup:
+  dependencies:
+    - base
+    - Cabal
+    - proto-lens-setup
+
+library:
+  source-dirs: src
+
+  dependencies:
+    - base
+    - proto-lens-runtime
+    - http2-client-grpc
+    - http2-grpc-proto-lens
+    - bytestring
+    - http2-client
+    - text
+    - mtl
+    - lens
+    - concurrent-extra >= 0.7
+    - proto-lens
+
+  exposed-modules:
+    - Invest.Client
+    - Invest.Client.Helpers
+    - Invest.Service.Instruments
+    - Invest.Service.MarketData
+    - Invest.Service.MarketDataStream
+    - Invest.Service.Operations
+    - Invest.Service.Orders
+    - Invest.Service.Sandbox
+    - Invest.Service.StopOrders
+    - Invest.Service.Users
+
+  generated-exposed-modules:
+    - Proto.Google.Protobuf.Timestamp
+    - Proto.Invest.Common
+    - Proto.Invest.Common_Fields
+    - Proto.Invest.Instruments
+    - Proto.Invest.Instruments_Fields
+    - Proto.Invest.Marketdata
+    - Proto.Invest.Marketdata_Fields
+    - Proto.Invest.Operations
+    - Proto.Invest.Operations_Fields
+    - Proto.Invest.Orders
+    - Proto.Invest.Orders_Fields
+    - Proto.Invest.Sandbox
+    - Proto.Invest.Sandbox_Fields
+    - Proto.Invest.Stoporders
+    - Proto.Invest.Stoporders_Fields
+    - Proto.Invest.Users
+    - Proto.Invest.Users_Fields
+    

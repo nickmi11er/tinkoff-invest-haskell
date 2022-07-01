@@ -1,0 +1,27 @@
+name:                tinkoff-invest-example
+version:             0.1.0.0
+homepage:            https://github.com/nickmi11er/tinkoff-invest-haskell#readme
+license:             MIT
+author:              Nick Miller
+maintainer:          nickmiller.on@gmail.com
+copyright:           Copyright (c) 2022 Nick Miller
+
+default-extensions:
+  - LambdaCase
+  - DataKinds
+
+executables:
+  tinkoff-invest-example:
+    main:         Main.hs
+    source-dirs:  src
+
+    dependencies:
+      - tinkoff-invest-sdk
+      - base
+      - lens
+      - text
+      - utf8-string
+      - http2-client
+      - proto-lens
+      - http2-client-grpc
+      - monad-loops
