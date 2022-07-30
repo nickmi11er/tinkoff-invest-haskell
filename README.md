@@ -36,6 +36,9 @@ main = void . runExceptT $ client <#> getBaseShares #> (liftIO . print)
     }
 ```
 
+### Stream queries
+
+```haskell
 main :: IO ()
 main = do
     let config = ClientConfig { token = "your_token", appName = Just "your_app_name" }
