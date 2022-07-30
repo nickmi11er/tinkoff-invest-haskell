@@ -1,0 +1,34 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           tinkoff-invest-example
+version:        0.1.0.0
+category:       Finance
+homepage:       https://github.com/nickmi11er/tinkoff-invest-haskell#readme
+author:         Nick Miller
+maintainer:     nickmiller.on@gmail.com
+copyright:      Copyright (c) 2022 Nick Miller
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+
+executable tinkoff-invest-example
+  main-is: Main.hs
+  other-modules:
+      MarketDataStreamClient
+      SandBoxClient
+      SimpleClient
+      Paths_tinkoff_invest_example
+  hs-source-dirs:
+      src
+  default-extensions:
+      LambdaCase
+      DataKinds
+  build-depends:
+      base
+    , text
+    , tinkoff-invest-sdk
+  default-language: Haskell2010

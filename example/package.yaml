@@ -5,6 +5,7 @@ license:             MIT
 author:              Nick Miller
 maintainer:          nickmiller.on@gmail.com
 copyright:           Copyright (c) 2022 Nick Miller
+category:            Finance
 
 default-extensions:
   - LambdaCase
@@ -18,10 +19,4 @@ executables:
     dependencies:
       - tinkoff-invest-sdk
       - base
-      - lens
       - text
-      - utf8-string
-      - http2-client
-      - proto-lens
-      - http2-client-grpc
-      - monad-loops

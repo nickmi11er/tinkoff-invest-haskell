@@ -9,7 +9,7 @@ Haskell gRPC based SDK for [Tinkoff Invest API V2](https://github.com/Tinkoff/in
 
 ### Project dependency
 
-The library is distributed via Hackage module. To use this SDK in your project you should add folowing line to dependencies block of `package.yaml`
+The library is distributed via Hackage [module](https://hackage.haskell.org/package/tinkoff-invest-sdk). To use this SDK in your project you should add folowing line to dependencies block of `package.yaml`
 
 ```yaml
 dependencies:
@@ -63,4 +63,8 @@ _See more examples [here](/example/src)_
 
 ## Contribution
 
-TODO
+### Build project steps
+
+1. Install [Stack](https://docs.haskellstack.org/en/stable/README/) tool
+2. Install [ProtoBuff Compiller](https://grpc.io/docs/protoc-installation/)
+3. Run `stack build` from project root directory
