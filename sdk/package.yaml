@@ -1,10 +1,13 @@
 name: tinkoff-invest-sdk
 version: 0.1.0.0
 homepage: https://github.com/nickmi11er/tinkoff-invest-haskell#readme
+description: Simple gRPC based SDK for Tinkoff Invest API V2
+synopsis: gRPC based SDK for Tinkoff Invest API V2
 license: MIT
 author: Nick Miller
 maintainer: nickmiller.on@gmail.com
 copyright: Copyright (c) 2022 Nick Miller
+category: Finance
 
 extra-source-files:
   - proto/**/*.proto
@@ -23,7 +26,7 @@ library:
   source-dirs: src
 
   dependencies:
-    - base
+    - base < 5.0
     - proto-lens-runtime
     - http2-client-grpc
     - http2-grpc-proto-lens
@@ -34,6 +37,9 @@ library:
     - lens
     - concurrent-extra >= 0.7
     - proto-lens
+    - async
+    - unordered-containers
+    - errors
 
   exposed-modules:
     - Invest.Client
@@ -48,6 +54,7 @@ library:
     - Invest.Service.Users
 
   generated-exposed-modules:
+    - Paths_tinkoff_invest_sdk
     - Proto.Google.Protobuf.Timestamp
     - Proto.Invest.Common
     - Proto.Invest.Common_Fields

@@ -25,20 +25,41 @@ Tinkoff Invest API requires access token for comunications. [There is instructio
 ### Unary queries
 
 ```haskell
-getBaseShares :: GrpcClient -> IO [I.Share]
-getBaseShares gc = (^. I.instruments) <$> (liftIO . runGrpc $ I.shares gc req)
-  where req = defMessage & I.instrumentStatus .~ I.INSTRUMENT_STATUS_BASE
+getBaseShares :: GrpcClient -> GrpcIO [Share]
+getBaseShares gc = shares gc (defMessage & I.instrumentStatus .~ INSTRUMENT_STATUS_BASE)
 
 main :: IO ()
-main = do
-  let config = ClientConfig {
-    token = "your_token",
-    appName = Just "YourAppName"
-  }
-  client <- initGrpcClient config
-  shares <- getBaseShares client
-  mapM_ print shares
+main = void . runExceptT $ client <#> getBaseShares #> (liftIO . print)
+    where initClient = initGrpcClient $ ClientConfig {
+        token = "your_token",
+        appName = Just "your_app_name"
+    }
 ```
+
+### Stream queries
+
+```haskell
+main :: IO ()
+main = do
+    let config = ClientConfig { token = "your_token", appName = Just "your_app_name" }
+    client <- runClient config
+    stream <- marketDataStream client
+
+    subscribeOrderBook stream "BBG004730RP0" 10 \resp -> case resp ^. MD.maybe'payload of
+        Just (MarketDataResponse'SubscribeOrderBookResponse r) -> logResponse r >> pure Next
+        Just (MarketDataResponse'Orderbook r) -> logResponse r >> pure Next
+        _ -> return Break
+        
+    wait stream
+```
+
+_See more examples [here](/example)_
+
+## TODO
+
+- [ ] Cyrillic encoding support
+- [ ] More enhanced calculation monad
+- [ ] Trading stratagies
 
 ## Contribution
 
