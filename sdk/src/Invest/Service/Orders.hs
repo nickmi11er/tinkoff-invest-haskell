@@ -5,33 +5,27 @@ module Invest.Service.Orders(
     getOrders
 ) where
 
-import           Data.ProtoLens.Message       (defMessage)
-import           Network.GRPC.Client          (RawReply)
-import           Network.GRPC.Client.Helpers  (GrpcClient, rawUnary)
-import           Network.GRPC.HTTP2.ProtoLens (RPC (..))
-import           Network.HTTP2.Client         (ClientIO, TooMuchConcurrency)
-import           Proto.Invest.Orders          as Orders
+import           Control.Lens                    ((^.))
+import           Data.ProtoLens.Message          (defMessage)
+import           Invest.Client.Helpers           (GrpcClient, GrpcIO, runUnary,
+                                                  runUnary_)
+import           Network.GRPC.HTTP2.ProtoLens    (RPC (..))
+import           Proto.Google.Protobuf.Timestamp
+import qualified Proto.Invest.Common_Fields      as C
+import           Proto.Invest.Orders
+import qualified Proto.Invest.Orders_Fields      as O
 
-postOrder
-    :: GrpcClient
-    -> Orders.PostOrderRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.PostOrderResponse))
-postOrder = rawUnary (RPC :: RPC Orders.OrdersService "postOrder")
+postOrder :: GrpcClient -> PostOrderRequest -> GrpcIO PostOrderResponse
+postOrder = runUnary (RPC :: RPC OrdersService "postOrder")
 
-cancelOrder
-    :: GrpcClient
-    -> Orders.CancelOrderRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.CancelOrderResponse))
-cancelOrder = rawUnary (RPC :: RPC Orders.OrdersService "cancelOrder")
+cancelOrder :: GrpcClient -> CancelOrderRequest -> GrpcIO Timestamp
+cancelOrder = runUnary_ (^. C.time) (RPC :: RPC OrdersService "cancelOrder")
 
-getOrderState
-    :: GrpcClient
-    -> Orders.GetOrderStateRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.OrderState))
-getOrderState = rawUnary (RPC :: RPC Orders.OrdersService "getOrderState")
+getOrderState :: GrpcClient -> GetOrderStateRequest -> GrpcIO OrderState
+getOrderState = runUnary (RPC :: RPC OrdersService "getOrderState")
 
-getOrders
-    :: GrpcClient
-    -> Orders.GetOrdersRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.GetOrdersResponse))
-getOrders = rawUnary (RPC :: RPC Orders.OrdersService "getOrders")
+getOrders :: GrpcClient -> GetOrdersRequest -> GrpcIO [OrderState]
+getOrders = runUnary_ (^. O.orders) (RPC :: RPC OrdersService "getOrders")
+
+replaceOrder :: GrpcClient -> ReplaceOrderRequest -> GrpcIO PostOrderResponse
+replaceOrder = runUnary (RPC :: RPC OrdersService "replaceOrder")

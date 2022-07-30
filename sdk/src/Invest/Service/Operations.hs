@@ -7,45 +7,31 @@ module Invest.Service.Operations(
     getDividendsForeignIssuer
 ) where
 
-import           Data.ProtoLens.Message       (defMessage)
-import           Network.GRPC.Client          (RawReply)
-import           Network.GRPC.Client.Helpers  (GrpcClient, rawUnary)
-import           Network.GRPC.HTTP2.ProtoLens (RPC (..))
-import           Network.HTTP2.Client         (ClientIO, TooMuchConcurrency)
-import           Proto.Invest.Operations      as Operations
+import           Control.Lens                   ((^.))
+import           Data.ProtoLens.Message         (defMessage)
+import           Invest.Client.Helpers          (GrpcClient, GrpcIO, runUnary,
+                                                 runUnary_)
+import           Network.GRPC.HTTP2.ProtoLens   (RPC (..))
+import           Proto.Invest.Operations
+import qualified Proto.Invest.Operations_Fields as O
 
-getOperations
-    :: GrpcClient
-    -> Operations.OperationsRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.OperationsResponse))
-getOperations = rawUnary (RPC :: RPC Operations.OperationsService "getOperations")
+getOperations :: GrpcClient -> OperationsRequest -> GrpcIO [Operation]
+getOperations = runUnary_ (^. O.operations) (RPC :: RPC OperationsService "getOperations")
 
-getPortfolio
-    :: GrpcClient
-    -> Operations.PortfolioRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.PortfolioResponse))
-getPortfolio = rawUnary (RPC :: RPC Operations.OperationsService "getPortfolio")
+getPortfolio :: GrpcClient -> PortfolioRequest -> GrpcIO PortfolioResponse
+getPortfolio = runUnary (RPC :: RPC OperationsService "getPortfolio")
 
-getPositions
-    :: GrpcClient
-    -> Operations.PositionsRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.PositionsResponse))
-getPositions = rawUnary (RPC :: RPC Operations.OperationsService "getPositions")
+getPositions :: GrpcClient -> PositionsRequest -> GrpcIO PositionsResponse
+getPositions = runUnary (RPC :: RPC OperationsService "getPositions")
 
-getWithdrawLimits
-    :: GrpcClient
-    -> Operations.WithdrawLimitsRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.WithdrawLimitsResponse))
-getWithdrawLimits = rawUnary (RPC :: RPC Operations.OperationsService "getWithdrawLimits")
+getWithdrawLimits :: GrpcClient -> WithdrawLimitsRequest -> GrpcIO WithdrawLimitsResponse
+getWithdrawLimits = runUnary (RPC :: RPC OperationsService "getWithdrawLimits")
 
-getBrokerReport
-    :: GrpcClient
-    -> Operations.BrokerReportRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.BrokerReportResponse))
-getBrokerReport = rawUnary (RPC :: RPC Operations.OperationsService "getBrokerReport")
+getBrokerReport :: GrpcClient -> BrokerReportRequest -> GrpcIO BrokerReportResponse
+getBrokerReport = runUnary (RPC :: RPC OperationsService "getBrokerReport")
 
-getDividendsForeignIssuer
-    :: GrpcClient
-    -> Operations.GetDividendsForeignIssuerRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.GetDividendsForeignIssuerResponse))
-getDividendsForeignIssuer = rawUnary (RPC :: RPC Operations.OperationsService "getDividendsForeignIssuer")
+getDividendsForeignIssuer :: GrpcClient -> GetDividendsForeignIssuerRequest -> GrpcIO GetDividendsForeignIssuerResponse
+getDividendsForeignIssuer = runUnary (RPC :: RPC OperationsService "getDividendsForeignIssuer")
+
+getOperationsByCursor :: GrpcClient -> GetOperationsByCursorRequest -> GrpcIO GetOperationsByCursorResponse
+getOperationsByCursor = runUnary (RPC :: RPC OperationsService "getOperationsByCursor")

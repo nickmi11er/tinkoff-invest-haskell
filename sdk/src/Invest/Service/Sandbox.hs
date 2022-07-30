@@ -12,78 +12,55 @@ module Invest.Service.Sandbox(
     sandboxPayIn
 ) where
 
-import           Data.ProtoLens.Message       (defMessage)
-import           Network.GRPC.Client          (RawReply)
-import           Network.GRPC.Client.Helpers  (GrpcClient, rawUnary)
-import           Network.GRPC.HTTP2.ProtoLens (RPC (..))
-import           Network.HTTP2.Client         (ClientIO, TooMuchConcurrency)
-import           Proto.Invest.Operations      as Operations
-import           Proto.Invest.Orders          as Orders
-import           Proto.Invest.Sandbox         as Sandbox
-import           Proto.Invest.Users           as Users
+import           Control.Lens                    ((&), (.~), (^.))
+import           Data.ProtoLens.Message          (defMessage)
+import           Data.Text
+import           Invest.Client.Helpers           (GrpcClient, GrpcIO, runUnary,
+                                                  runUnary_)
+import           Network.GRPC.Client             (RawReply)
+import           Network.GRPC.HTTP2.ProtoLens    (RPC (..))
+import           Proto.Google.Protobuf.Timestamp
+import qualified Proto.Invest.Common_Fields      as C
+import           Proto.Invest.Operations
+import qualified Proto.Invest.Operations_Fields  as OP
+import           Proto.Invest.Orders
+import qualified Proto.Invest.Orders_Fields      as O
+import           Proto.Invest.Sandbox
+import qualified Proto.Invest.Sandbox_Fields     as S
+import           Proto.Invest.Users
+import qualified Proto.Invest.Users_Fields       as U
+import Proto.Invest.Common
 
-openSandboxAccount
-    :: GrpcClient
-    -> ClientIO (Either TooMuchConcurrency (RawReply Sandbox.OpenSandboxAccountResponse))
-openSandboxAccount gc
-    = rawUnary (RPC :: RPC Sandbox.SandboxService "openSandboxAccount") gc defMessage
+openSandboxAccount :: GrpcClient -> GrpcIO Text
+openSandboxAccount gc = runUnary_ (^. S.accountId) (RPC :: RPC SandboxService "openSandboxAccount") gc defMessage
 
-getSandboxAccounts
-    :: GrpcClient
-    -> ClientIO (Either TooMuchConcurrency (RawReply Users.GetAccountsResponse))
-getSandboxAccounts gc
-    = rawUnary (RPC :: RPC Sandbox.SandboxService "getSandboxAccounts") gc defMessage
+getSandboxAccounts :: GrpcClient -> GrpcIO [Account]
+getSandboxAccounts gc = runUnary_ (^. U.accounts) (RPC :: RPC SandboxService "getSandboxAccounts") gc defMessage
 
-closeSandboxAccount
-    :: GrpcClient
-    -> Sandbox.CloseSandboxAccountRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Sandbox.CloseSandboxAccountResponse))
-closeSandboxAccount = rawUnary (RPC :: RPC Sandbox.SandboxService "closeSandboxAccount")
+closeSandboxAccount :: GrpcClient -> CloseSandboxAccountRequest -> GrpcIO CloseSandboxAccountResponse
+closeSandboxAccount = runUnary (RPC :: RPC SandboxService "closeSandboxAccount")
 
-postSandboxOrder
-    :: GrpcClient
-    -> Orders.PostOrderRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.PostOrderResponse))
-postSandboxOrder = rawUnary (RPC :: RPC Sandbox.SandboxService "postSandboxOrder")
+postSandboxOrder :: GrpcClient -> PostOrderRequest -> GrpcIO PostOrderResponse
+postSandboxOrder = runUnary (RPC :: RPC SandboxService "postSandboxOrder")
 
-getSandboxOrders
-    :: GrpcClient
-    -> Orders.GetOrdersRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.GetOrdersResponse))
-getSandboxOrders = rawUnary (RPC :: RPC Sandbox.SandboxService "getSandboxOrders")
+getSandboxOrders :: GrpcClient -> Text -> GrpcIO [OrderState]
+getSandboxOrders gc accountId = runUnary_ (^. O.orders) (RPC :: RPC SandboxService "getSandboxOrders") gc message
+    where message = defMessage & O.accountId .~ accountId
 
-cancelSandboxOrder
-    :: GrpcClient
-    -> Orders.CancelOrderRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.CancelOrderResponse))
-cancelSandboxOrder = rawUnary (RPC :: RPC Sandbox.SandboxService "cancelSandboxOrder")
+cancelSandboxOrder :: GrpcClient -> CancelOrderRequest -> GrpcIO Timestamp
+cancelSandboxOrder = runUnary_ (^. C.time) (RPC :: RPC SandboxService "cancelSandboxOrder")
 
-getSandboxOrderState
-    :: GrpcClient
-    -> Orders.GetOrderStateRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Orders.OrderState))
-getSandboxOrderState = rawUnary (RPC :: RPC Sandbox.SandboxService "getSandboxOrderState")
+getSandboxOrderState :: GrpcClient -> GetOrderStateRequest -> GrpcIO OrderState
+getSandboxOrderState = runUnary (RPC :: RPC SandboxService "getSandboxOrderState")
 
-getSandboxPositions
-    :: GrpcClient
-    -> Operations.PositionsRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.PositionsResponse))
-getSandboxPositions = rawUnary (RPC :: RPC Sandbox.SandboxService "getSandboxPositions")
+getSandboxPositions :: GrpcClient -> PositionsRequest -> GrpcIO PositionsResponse
+getSandboxPositions = runUnary (RPC :: RPC SandboxService "getSandboxPositions")
 
-getSandboxOperations
-    :: GrpcClient
-    -> Operations.OperationsRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.OperationsResponse))
-getSandboxOperations = rawUnary (RPC :: RPC Sandbox.SandboxService "getSandboxOperations")
+getSandboxOperations :: GrpcClient -> OperationsRequest -> GrpcIO [Operation]
+getSandboxOperations = runUnary_ (^. OP.operations) (RPC :: RPC SandboxService "getSandboxOperations")
 
-getSandboxPortfolio
-    :: GrpcClient
-    -> Operations.PortfolioRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Operations.PortfolioResponse))
-getSandboxPortfolio = rawUnary (RPC :: RPC Sandbox.SandboxService "getSandboxPortfolio")
+getSandboxPortfolio :: GrpcClient -> PortfolioRequest -> GrpcIO PortfolioResponse
+getSandboxPortfolio = runUnary (RPC :: RPC SandboxService "getSandboxPortfolio")
 
-sandboxPayIn
-    :: GrpcClient
-    -> Sandbox.SandboxPayInRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply Sandbox.SandboxPayInResponse))
-sandboxPayIn = rawUnary (RPC :: RPC Sandbox.SandboxService "sandboxPayIn")
+sandboxPayIn :: GrpcClient -> SandboxPayInRequest -> GrpcIO MoneyValue
+sandboxPayIn = runUnary_ (^. S.balance) (RPC :: RPC SandboxService "sandboxPayIn")

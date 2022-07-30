@@ -6,39 +6,24 @@ module Invest.Service.MarketData(
     getLastTrades
 ) where
 
-import           Network.GRPC.Client            (RawReply)
-import           Network.GRPC.Client.Helpers    (GrpcClient, rawUnary)
+import           Control.Lens                   ((^.))
+import           Invest.Client.Helpers          (GrpcClient, GrpcIO, runUnary,
+                                                 runUnary_)
 import           Network.GRPC.HTTP2.ProtoLens   (RPC (..))
-import           Network.HTTP2.Client           (ClientIO, TooMuchConcurrency)
-import qualified Proto.Invest.Marketdata        as MD
+import           Proto.Invest.Marketdata
 import qualified Proto.Invest.Marketdata_Fields as MD
 
-getCandles
-    :: GrpcClient
-    -> MD.GetCandlesRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply MD.GetCandlesResponse))
-getCandles = rawUnary (RPC :: RPC MD.MarketDataService "getCandles")
+getCandles :: GrpcClient -> GetCandlesRequest -> GrpcIO [HistoricCandle]
+getCandles = runUnary_ (^. MD.candles) (RPC :: RPC MarketDataService "getCandles")
 
-getLastPrices
-    :: GrpcClient
-    -> MD.GetLastPricesRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply MD.GetLastPricesResponse))
-getLastPrices = rawUnary (RPC :: RPC MD.MarketDataService "getLastPrices")
+getLastPrices :: GrpcClient -> GetLastPricesRequest -> GrpcIO [LastPrice]
+getLastPrices = runUnary_ (^. MD.lastPrices) (RPC :: RPC MarketDataService "getLastPrices")
 
-getOrderBook
-    :: GrpcClient
-    -> MD.GetOrderBookRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply MD.GetOrderBookResponse))
-getOrderBook = rawUnary (RPC :: RPC MD.MarketDataService "getOrderBook")
+getOrderBook :: GrpcClient -> GetOrderBookRequest -> GrpcIO GetOrderBookResponse
+getOrderBook = runUnary (RPC :: RPC MarketDataService "getOrderBook")
 
-getTradingStatus
-    :: GrpcClient
-    -> MD.GetTradingStatusRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply MD.GetTradingStatusResponse))
-getTradingStatus = rawUnary (RPC :: RPC MD.MarketDataService "getTradingStatus")
+getTradingStatus :: GrpcClient -> GetTradingStatusRequest -> GrpcIO GetTradingStatusResponse
+getTradingStatus = runUnary (RPC :: RPC MarketDataService "getTradingStatus")
 
-getLastTrades
-    :: GrpcClient
-    -> MD.GetLastTradesRequest
-    -> ClientIO (Either TooMuchConcurrency (RawReply MD.GetLastTradesResponse))
-getLastTrades = rawUnary (RPC :: RPC MD.MarketDataService "getLastTrades")
+getLastTrades :: GrpcClient -> GetLastTradesRequest -> GrpcIO [Trade]
+getLastTrades = runUnary_ (^. MD.trades) (RPC :: RPC MarketDataService "getLastTrades")

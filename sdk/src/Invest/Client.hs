@@ -1,17 +1,29 @@
 {-# LANGUAGE TupleSections #-}
-
 module Invest.Client(
       ClientConfig(..)
     , simpleClientConfig
     , initGrpcClient
+    , (&), (.~), (^.)
+    , defMessage
+    , runGrpc
+    , (<#>), (#>>), (#>)
+    , runExceptT
+    , GrpcIO
+    , GrpcClient
+    , liftIO
 ) where
 
 import           Control.Exception           (throwIO)
+import           Control.Lens                ((&), (.~), (^.))
+import           Control.Monad.Except        (ExceptT, MonadIO (liftIO), lift,
+                                              runExceptT, throwError)
 import           Data.ByteString             (ByteString)
 import qualified Data.ByteString.Char8       as BC (pack)
 import           Data.Maybe                  (maybeToList)
+import           Data.ProtoLens.Message      (defMessage)
 import           Data.Text                   as T (pack)
 import           Invest.Client.Errors        (SDKError (..))
+import           Invest.Client.Helpers
 import           Network.GRPC.Client         (uncompressed)
 import           Network.GRPC.Client.Helpers (GrpcClient,
                                               GrpcClientConfig (_grpcClientConfigCompression, _grpcClientConfigHeaders),
@@ -24,10 +36,10 @@ data ClientConfig = ClientConfig { token :: String, appName :: Maybe String }
 simpleClientConfig :: String -> ClientConfig
 simpleClientConfig token = ClientConfig { token = token, appName = Nothing }
 
-initGrpcClient :: ClientConfig -> IO GrpcClient
-initGrpcClient cf = runClientIO (setupGrpcClient . prepareGrpcConfig $ cf) >>= \case
+initGrpcClient :: ClientConfig -> GrpcIO GrpcClient
+initGrpcClient cf = lift $ runClientIO (setupGrpcClient . prepareGrpcConfig $ cf) >>= \case
     Right client -> pure client
-    Left err     -> throwIO . ClientSetupError . T.pack $ show err
+    Left err     -> throwError . userError . show $ err
 
 prepareGrpcConfig :: ClientConfig -> GrpcClientConfig
 prepareGrpcConfig config = (grpcClientConfigSimple "invest-public-api.tinkoff.ru" 443 True) {
