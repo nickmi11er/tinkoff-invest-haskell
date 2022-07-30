@@ -27,7 +27,7 @@ runMarketDataStreamClient = do
     subscribeOrderBook stream "BBG004730RP0" 10 \resp -> case resp ^. MD.maybe'payload of
         Just (MarketDataResponse'SubscribeOrderBookResponse r) -> logResponse r >> pure Next
         Just (MarketDataResponse'Orderbook r) -> logResponse r >> pure Next
-        _ -> return Break
+        _ -> pure Break
 
     -- close stream after 5 seconds
     forkIO $ threadDelay 5000000 >> close stream

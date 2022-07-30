@@ -36,9 +36,6 @@ main = void . runExceptT $ client <#> getBaseShares #> (liftIO . print)
     }
 ```
 
-### Stream queries
-
-```haskell
 main :: IO ()
 main = do
     let config = ClientConfig { token = "your_token", appName = Just "your_app_name" }
@@ -48,12 +45,12 @@ main = do
     subscribeOrderBook stream "BBG004730RP0" 10 \resp -> case resp ^. MD.maybe'payload of
         Just (MarketDataResponse'SubscribeOrderBookResponse r) -> logResponse r >> pure Next
         Just (MarketDataResponse'Orderbook r) -> logResponse r >> pure Next
-        _ -> return Break
+        _ -> pure Break
         
     wait stream
 ```
 
-_See more examples [here](/example)_
+_See more examples [here](/example/src)_
 
 ## TODO
 
