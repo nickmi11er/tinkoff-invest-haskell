@@ -29,7 +29,7 @@ getBaseShares :: GrpcClient -> GrpcIO [Share]
 getBaseShares gc = shares gc (defMessage & I.instrumentStatus .~ INSTRUMENT_STATUS_BASE)
 
 main :: IO ()
-main = void . runExceptT $ client <#> getBaseShares #> (liftIO . print)
+main = void . runExceptT $ initClient <#> getBaseShares #> (liftIO . print)
     where initClient = initGrpcClient $ ClientConfig {
         token = "your_token",
         appName = Just "your_app_name"
