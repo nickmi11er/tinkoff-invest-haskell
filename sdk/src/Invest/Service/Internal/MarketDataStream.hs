@@ -14,9 +14,9 @@ import           Control.Concurrent             as GHC.Conc.Sync (ThreadId)
 import           Control.Concurrent.Chan        (Chan, readChan, writeChan)
 import           Control.Exception              (SomeException)
 import           Control.Lens                   ((&), (.~), (^.))
-import           Control.Monad                  (void)
-import           Control.Monad.Cont             (liftIO)
-import           Control.Monad.Except           (forever, throwError)
+import           Control.Monad                  (forever, void)
+import           Control.Monad.Except           (throwError)
+import           Control.Monad.IO.Class
 import           Data.Int                       (Int32)
 import           Data.Text                      as T (Text)
 import           Invest.Client

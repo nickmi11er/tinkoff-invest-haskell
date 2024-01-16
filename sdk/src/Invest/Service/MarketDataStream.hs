@@ -19,8 +19,6 @@ import           Control.Exception                        ()
 import           Control.Exception.Base                   (IOException)
 import           Control.Lens                             ((&), (.~), (^.))
 import           Control.Monad
-import           Control.Monad.Cont                       (MonadIO (..))
-import           Control.Monad.Except                     (MonadIO (..))
 import           Control.Monad.IO.Class                   (MonadIO (..))
 import           Control.Monad.Trans                      (MonadIO (..))
 import           Data.Int                                 (Int32)

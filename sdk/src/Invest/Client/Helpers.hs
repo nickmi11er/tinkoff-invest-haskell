@@ -11,8 +11,8 @@ module Invest.Client.Helpers (
 
 import           Control.Exception           (Exception, IOException,
                                               SomeException (SomeException))
-import           Control.Monad.Except        (ExceptT, lift, runExceptT,
-                                              throwError)
+import           Control.Monad.Except        (ExceptT, runExceptT, throwError)
+import           Control.Monad.Trans         (lift)
 import           Data.Text                   as T (Text, pack)
 import           Network.GRPC.Client         (RawReply)
 import           Network.GRPC.Client.Helpers (GrpcClient, rawUnary)

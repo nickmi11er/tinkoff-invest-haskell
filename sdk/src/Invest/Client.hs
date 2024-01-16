@@ -15,8 +15,9 @@ module Invest.Client(
 
 import           Control.Exception           (throwIO)
 import           Control.Lens                ((&), (.~), (^.))
-import           Control.Monad.Except        (ExceptT, MonadIO (liftIO), lift,
-                                              runExceptT, throwError)
+import           Control.Monad.Except        (ExceptT, runExceptT, throwError)
+import           Control.Monad.IO.Class
+import           Control.Monad.Trans         (lift)
 import           Data.ByteString             (ByteString)
 import qualified Data.ByteString.Char8       as BC (pack)
 import           Data.Maybe                  (maybeToList)
