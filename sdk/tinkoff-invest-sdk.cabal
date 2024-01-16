@@ -31,7 +31,7 @@ custom-setup
   setup-depends:
       Cabal >=3.4.1.0
     , base >=4.15.1.0
-    , proto-lens-setup >=0.4.0.6
+    , proto-lens-setup >=0.4.0.7
 
 library
   exposed-modules:
@@ -103,7 +103,6 @@ library
     , mtl >=2.2.2
     , proto-lens >=0.7.1.1
     , proto-lens-runtime >=0.7.0.2
-    , proto-lens-setup
     , text >=1.2.5.0
     , unordered-containers >=0.2.17.0
     , mtl
