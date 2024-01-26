@@ -54,4 +54,3 @@ apiHeaders config =
     where
         tokenH = (BC.pack "Authorization", BC.pack ("Bearer " ++ token config))
         appNameH = (BC.pack "x-app-name",) . BC.pack <$> appName config
-
