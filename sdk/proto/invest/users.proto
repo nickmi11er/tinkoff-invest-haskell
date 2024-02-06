@@ -2,7 +2,15 @@ syntax = "proto3";
 
 package tinkoff.public.invest.api.contract.v1;
 
+option go_package = "./;investapi";
+option java_package = "ru.tinkoff.piapi.contract.v1";
+option java_multiple_files = true;
+option csharp_namespace = "Tinkoff.InvestApi.V1";
+option objc_class_prefix = "TIAPI";
+option php_namespace = "Tinkoff\\Invest\\V1";
+
 import "google/protobuf/timestamp.proto";
+import "google/api/field_behavior.proto";
 import "invest/common.proto";
 
 service UsersService { /*Сервис предназначен для получения: </br> **1**.
@@ -75,7 +83,7 @@ enum AccountStatus {
 message GetMarginAttributesRequest {
 
   // Идентификатор счёта пользователя.
-  string account_id = 1;
+  string account_id = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 //Маржинальные показатели по счёту.
@@ -95,6 +103,9 @@ message GetMarginAttributesResponse {
 
   // Объем недостающих средств. Разница между стартовой маржой и ликвидной стоимости портфеля.
   MoneyValue amount_of_missing_funds = 5;
+
+  // Скорректированная маржа.Начальная маржа, в которой плановые позиции рассчитываются с учётом активных заявок на покупку позиций лонг или продажу позиций шорт.
+  MoneyValue corrected_margin = 6;
 }
 
 //Запрос текущих лимитов пользователя.
@@ -103,20 +114,21 @@ message GetUserTariffRequest {
 
 //Текущие лимиты пользователя.
 message GetUserTariffResponse {
-  repeated UnaryLimit unary_limits = 1; //Массив лимитов пользователя по unary-запросам
-  repeated StreamLimit stream_limits = 2; //Массив лимитов пользователей для stream-соединений
+  repeated UnaryLimit unary_limits = 1; //Массив лимитов пользователя по unary-запросам.
+  repeated StreamLimit stream_limits = 2; //Массив лимитов пользователей для stream-соединений.
 }
 
 //Лимит unary-методов.
 message UnaryLimit {
-  int32 limit_per_minute = 1; //Количество unary-запросов в минуту
-  repeated string methods = 2; //Названия методов
+  int32 limit_per_minute = 1; //Количество unary-запросов в минуту.
+  repeated string methods = 2; //Названия методов.
 }
 
 //Лимит stream-соединений.
 message StreamLimit {
-  int32 limit = 1; //Максимальное количество stream-соединений
-  repeated string streams = 2; //Названия stream-методов
+  int32 limit = 1; //Максимальное количество stream-соединений.
+  repeated string streams = 2; //Названия stream-методов.
+  int32 open = 3; //Текущее количество открытых stream-соединений.
 }
 
 //Запрос информации о пользователе.
@@ -127,7 +139,7 @@ message GetInfoRequest {
 message GetInfoResponse {
   bool prem_status = 1; //Признак премиум клиента.
   bool qual_status = 2; //Признак квалифицированного инвестора.
-  repeated string qualified_for_work_with = 3; //Набор требующих тестирования инструментов и возможностей, с которыми может работать пользователь. [Подробнее](https://tinkoff.github.io/investAPI/faq_users/).
+  repeated string qualified_for_work_with = 3; //Набор требующих тестирования инструментов и возможностей, с которыми может работать пользователь. [Подробнее](https://russianinvestments.github.io/investAPI/faq_users/).
   string tariff = 4; //Наименование тарифа пользователя.
 }
 

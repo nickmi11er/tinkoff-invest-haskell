@@ -1,6 +1,6 @@
 cabal-version:  2.0
 name:           tinkoff-invest-sdk
-version:        0.1.0.2
+version:        0.1.1.0
 synopsis:       gRPC based SDK for Tinkoff Invest API V2
 description:    Simple gRPC based SDK for Tinkoff Invest API V2
 category:       Finance
@@ -12,7 +12,9 @@ license:        MIT
 license-file:   LICENSE
 build-type:     Custom
 extra-source-files:
+    proto/google/protobuf/descriptor.proto
     proto/google/protobuf/timestamp.proto
+    proto/google/api/field_behavior.proto
     proto/invest/common.proto
     proto/invest/instruments.proto
     proto/invest/marketdata.proto
@@ -41,8 +43,10 @@ library
       Invest.Service.StopOrders
       Invest.Service.Users
       Paths_tinkoff_invest_sdk
+      Proto.Google.Protobuf.Descriptor
       Proto.Google.Protobuf.Timestamp
       Proto.Google.Protobuf.Timestamp_Fields
+      Proto.Google.Api.FieldBehavior
       Proto.Invest.Common
       Proto.Invest.Common_Fields
       Proto.Invest.Instruments
