@@ -1,6 +1,6 @@
 cabal-version:  2.0
 name:           tinkoff-invest-sdk
-version:        0.1.1.0
+version:        0.1.1.1
 synopsis:       gRPC based SDK for Tinkoff Invest API V2
 description:    Simple gRPC based SDK for Tinkoff Invest API V2
 category:       Finance
