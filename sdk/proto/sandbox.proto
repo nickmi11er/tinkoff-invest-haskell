@@ -9,10 +9,10 @@ option csharp_namespace = "Tinkoff.InvestApi.V1";
 option objc_class_prefix = "TIAPI";
 option php_namespace = "Tinkoff\\Invest\\V1";
 
-import "invest/common.proto";
-import "invest/orders.proto";
-import "invest/operations.proto";
-import "invest/users.proto";
+import "common.proto";
+import "orders.proto";
+import "operations.proto";
+import "users.proto";
 import "google/api/field_behavior.proto";
 
 service SandboxService { //Сервис для работы с песочницей TINKOFF INVEST API

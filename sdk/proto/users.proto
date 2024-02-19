@@ -11,7 +11,7 @@ option php_namespace = "Tinkoff\\Invest\\V1";
 
 import "google/protobuf/timestamp.proto";
 import "google/api/field_behavior.proto";
-import "invest/common.proto";
+import "common.proto";
 
 service UsersService { /*Сервис предназначен для получения: </br> **1**.
                        списка счетов пользователя; </br> **2**. маржинальных показателей по счёту.*/

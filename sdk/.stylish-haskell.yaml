@@ -1,0 +1,40 @@
+steps:
+  - unicode_syntax:
+      add_language_pragma: false
+
+  - module_header:
+      indent: 2
+      sort: true
+      separate_lists: true
+
+  - records:
+      equals: "indent 2"
+      first_field: "indent 2"
+      field_comment: 2
+      deriving: 2
+      via: "indent 2"
+      sort_deriving: true
+
+  - simple_align:
+      cases: always
+      top_level_patterns: always
+      records: always
+      multi_way_if: always
+
+  - imports:
+      align: global
+      list_align: after_alias
+      pad_module_names: true
+      empty_list_align: inherit
+      list_padding: 2
+      separate_lists: true
+
+  - language_pragmas:
+      style: vertical_compact
+      align: true
+      remove_redundant: true
+      language_prefix: LANGUAGE
+
+columns: 100
+newline: lf
+cabal: true

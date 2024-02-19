@@ -11,7 +11,7 @@ option php_namespace = "Tinkoff\\Invest\\V1";
 
 import "google/protobuf/timestamp.proto";
 import "google/api/field_behavior.proto";
-import "invest/common.proto";
+import "common.proto";
 
 service StopOrdersService { /* Сервис предназначен для работы со стоп-заявками:</br> **1**.
                                выставление;</br> **2**. отмена;</br> **3**. получение списка стоп-заявок.*/
